@@ -1,13 +1,13 @@
 ---
 title: "RMarkdown Practice"
+author: "Karen Kyutoku"
+date: "2022/1/4"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-## R Markdown
 
 ```{r}
 #install.packages("tidyverse")
