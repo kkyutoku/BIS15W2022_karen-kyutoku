@@ -32,9 +32,17 @@ A numeric vector.
 my_vector <- c(10, 20, 30)
 ```
 
+```{r}
+class(my_vector)
+```
+
 A character vector. Characters always have quotes and may be referred to as "strings".
 ```{r}
 days_of_the_week <- c("Monday", "Tuesday", "Wednesday", "Thrusday", "Friday", "Saturday", "Sunday")
+```
+
+```{r}
+class(days_of_the_week)
 ```
 
 A convenient trick for creating a vector is to generate a sequence of numbers.
@@ -52,14 +60,29 @@ days_of_the_week[3]
 ## Practice
 Work through these examples and make adjustments to the values to experiment.
 
+```{r}
+my_vector_sequence2 <- c(1:25)
+my_vector_sequence2
+```
+```{r}
+my_vector_sequence2[my_vector_sequence2>=10]
+```
+
+```{r}
+my_vector_sequence2>10
+```
+
 1. Evaluate all numerics in `my_vector_sequence` to determine which has a value of 15.  
 ```{r}
-
+my_vector_sequence==15
 ```
 
 2. We can use operators such as <, >, ==, <==, etc. Show all values in `my_vector_sequence` that are less than 10.  How about less than or equal to 10?  
 ```{r}
-
+my_vector_sequence < 10
+```
+```{r}
+my_vector_sequence <= 10
 ```
 
 3. If you use `[]` then you only get the values, not the logical evaluation of the entire vector. Experiment with this by adjusting the chunk below.    
@@ -85,7 +108,7 @@ Deathly_Hallows_2 <- c(381.0, 960.5)
 Create a new object called `box_office`. Here we are using the `c` command to combine the vectors into one.
 ```{r}
 box_office <- c(Philosophers_Stone, Chamber_of_Secrets, Prisoner_of_Azkaban, Goblet_of_Fire, Order_of_the_Phoenix, Half_Blood_Prince, Deathly_Hallows_1, Deathly_Hallows_2)
-box_office
+box_office 
 ```
 
 Create `harry_potter_matrix` using the `matrix()` command. We need to tell R how to organize the `box_office` vector using the `nrow` and `byrow` commands.
@@ -136,12 +159,14 @@ all_harry_potter_matrix
 ## Practice
 1. What are the total earnings for the US and non-US regions?  
 ```{r}
-
+total_earnings <- colSums(all_harry_potter_matrix)
+total_earnings
 ```
 
 2. Add this information to the data matrix. Hint: you are adding a row, not a column.  
 ```{r}
-
+final_harry_potter_matrix <- rbind(all_harry_potter_matrix)
+final_harry_potter_matrix
 ```
 
 ## A few Extras
