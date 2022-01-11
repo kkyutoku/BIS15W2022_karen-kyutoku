@@ -89,6 +89,11 @@ mean(spring_7)
 ```{r}
 mean(spring_8)
 ```
+```{r}
+mean_vector <- rowMeans(hot_spring_matrix)
+mean_vector
+```
+
 
 7. Add this as a new column in the data matrix.  
 ```{r}
