@@ -616,7 +616,7 @@ summary(sleep)
 ##  Max.   :22.10   Max.   :5.71200   Max.   :6654.000  
 ##                  NA's   :27
 ```
-##Max sleep_total is 19.9, which is Little brown bat.
+## Max sleep_total is 19.9, which is Little brown bat.
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.   
