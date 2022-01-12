@@ -221,6 +221,15 @@ dim(sleep)
 4. Are there any NAs in the data? How did you determine this? Please show your code.  
 
 ```r
+anyNA(sleep)
+```
+
+```
+## [1] TRUE
+```
+
+
+```r
 is.na(sleep)
 ```
 
