@@ -16,8 +16,12 @@ Make sure to use the formatting conventions of RMarkdown to make your report nea
 1. What is a vector in R?  
 A vector is a data structure which is used to organize data in R.
 
+A vector in R is a type of data structure that is ordered and consists of elements, usually of the same class.
+
 2. What is a data matrix in R?  
 A data matrix is a collection of vectors which are organized in columns and rows.
+
+A data matrix is a series of stacked vectors arranged like a data table.
 
 3. Below are data collected by three scientists (Jill, Steve, Susan in order) measuring temperatures of eight hot springs. Run this code chunk to create the vectors.  
 ```{r}
@@ -101,7 +105,7 @@ mean_temp <- c(35.65, 34.61667, 29.85, 39.46667, 30.85, 30.2, 32.73333, 35.46667
 ```
 
 ```{r}
-all_hot_spring_matrix <- cbind(hot_spring_matrix, mean_temp)
+all_hot_spring_matrix <- cbind(hot_spring_matrix, mean_vector)
 all_hot_spring_matrix
 ```
 

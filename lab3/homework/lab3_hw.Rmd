@@ -24,15 +24,26 @@ library(tidyverse)
 help(msleep)
 ```
 
+```{r}
+dim(msleep)
+```
+
 2. Store these data into a new data frame `sleep`.
 ```{r}
 sleep <- data.frame(msleep)
 sleep
 ```
+```{r}
+sleep <- msleep
+```
+
 
 3. What are the dimensions of this data frame (variables and observations)? How do you know? Please show the *code* that you used to determine this below.  
 ```{r}
 dim(sleep)
+```
+```{r}
+glimpse(sleep)
 ```
 
 4. Are there any NAs in the data? How did you determine this? Please show your code.  
@@ -67,7 +78,7 @@ large
 
 8. What is the mean weight for both the small and large mammals?
 ```{r}
-mean(small$bodywt)
+mean(small$bodywt, na.rm = T)
 ```
 ```{r}
 x <- small[ , 11]
@@ -75,7 +86,7 @@ mean(x)
 ```
 
 ```{r}
-mean(large$bodywt)
+mean(large$bodywt, na.rm = T)
 ```
 ```{r}
 y <- large[ , 11]
@@ -84,14 +95,21 @@ mean(y)
 
 9. Using a similar approach as above, do large or small animals sleep longer on average?  
 ```{r}
-mean(small$sleep_total)
+mean(small$sleep_total, na.rm = T)
 ```
 
 ```{r}
-mean(large$sleep_total)
+mean(large$sleep_total, na.rm = T)
 ```
 
 10. Which animal is the sleepiest among the entire dataframe?
+```{r}
+max(sleep$sleep_total)
+```
+```{r}
+subset(sleep, sleep_total==19.9)
+```
+
 ```{r}
 summary(sleep)
 ```
