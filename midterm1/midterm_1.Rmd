@@ -25,7 +25,7 @@ If you plan to use any other libraries to complete this assignment then you shou
 library(tidyverse)
 ```
 ```{r}
-install.packages("janitor")
+#install.packages("janitor")
 library("janitor")
 ```
 
