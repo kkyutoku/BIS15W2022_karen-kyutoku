@@ -31,8 +31,8 @@ library(tidyverse)
 ```
 ## v ggplot2 3.3.5     v purrr   0.3.4
 ## v tibble  3.1.6     v dplyr   1.0.7
-## v tidyr   1.1.4     v stringr 1.4.0
-## v readr   2.1.1     v forcats 0.5.1
+## v tidyr   1.2.0     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.1
 ```
 
 ```
@@ -86,23 +86,11 @@ elephants <- readr::read_csv("data/ElephantsMF.csv")
 ```
 
 ```
-## Warning in unlink(c(requestFile, responseFile)): cannot get info on 'C:/Users/
-## KAREN/AppData/Local/Temp/RtmpCAFlhg/rstudio-ipc-requests-12fc3439a5e.rds',
-## reason 'アクセスが拒否されました。'
-```
-
-```
 ## Rows: 288 Columns: 3
-```
-
-```
 ## -- Column specification --------------------------------------------------------
 ## Delimiter: ","
 ## chr (1): Sex
 ## dbl (2): Age, Height
-```
-
-```
 ## 
 ## i Use `spec()` to retrieve the full column specification for this data.
 ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -178,6 +166,18 @@ mean(elephants$age)
 ## [1] 10.97132
 ```
 
+```r
+elephants %>% 
+  summarize(mean_age=mean(age))
+```
+
+```
+## # A tibble: 1 x 1
+##   mean_age
+##      <dbl>
+## 1     11.0
+```
+
 7. (2 points) How does the average age and height of elephants compare by sex?
 
 
@@ -207,6 +207,21 @@ elephants %>%
 ##   mean_male_age mean_male_height
 ##           <dbl>            <dbl>
 ## 1          8.95             185.
+```
+
+```r
+elephants %>% 
+  group_by(sex) %>% 
+  summarise(mean_age=mean(age),
+            mean_height=mean(height))
+```
+
+```
+## # A tibble: 2 x 3
+##   sex   mean_age mean_height
+##   <fct>    <dbl>       <dbl>
+## 1 F        12.8         190.
+## 2 M         8.95        185.
 ```
 
 8. (2 points) How does the average height of elephants compare by sex for individuals over 20 years old. Include the min and max height as well as the number of individuals in the sample as part of your analysis.  
@@ -244,6 +259,24 @@ elephants %>%
 ## 1        270.       229.       304.        13
 ```
 
+```r
+elephants %>% 
+  filter(age>20) %>% 
+  group_by(sex) %>% 
+  summarise(min_height=min(height),
+            max_height=max(height),
+            mean_height=mean(height),
+            n_elephants=n())
+```
+
+```
+## # A tibble: 2 x 5
+##   sex   min_height max_height mean_height n_elephants
+##   <fct>      <dbl>      <dbl>       <dbl>       <int>
+## 1 F           193.       278.        232.          37
+## 2 M           229.       304.        270.          13
+```
+
 For the next series of questions, we will use data from a study on vertebrate community composition and impacts from defaunation in [Gabon, Africa](https://en.wikipedia.org/wiki/Gabon). One thing to notice is that the data include 24 separate transects. Each transect represents a path through different forest management areas.  
 
 Reference: Koerner SE, Poulsen JR, Blanchard EJ, Okouyi J, Clark CJ. Vertebrate community composition and diversity declines along a defaunation gradient radiating from rural villages in Gabon. _Journal of Applied Ecology_. 2016. This paper, along with a description of the variables is included inside the midterm 1 folder.  
@@ -257,16 +290,10 @@ vertebrates <- readr::read_csv("data/IvindoData_DryadVersion.csv")
 
 ```
 ## Rows: 24 Columns: 26
-```
-
-```
 ## -- Column specification --------------------------------------------------------
 ## Delimiter: ","
 ## chr  (2): HuntCat, LandUse
 ## dbl (24): TransectID, Distance, NumHouseholds, Veg_Rich, Veg_Stems, Veg_lian...
-```
-
-```
 ## 
 ## i Use `spec()` to retrieve the full column specification for this data.
 ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -394,6 +421,11 @@ class(vertebrates$land_use)
 ## [1] "factor"
 ```
 
+```r
+vertebrates <- vertebrates %>% 
+  mutate_if(is.character, factor)
+```
+
 10. (4 points) For the transects with high and moderate hunting intensity, how does the average diversity of birds and mammals compare?
 
 
@@ -409,6 +441,37 @@ vertebrates %>%
 ##   mean_bird_diversity mean_mammal_diversity
 ##                 <dbl>                 <dbl>
 ## 1                1.64                  1.71
+```
+
+```r
+vertebrates %>% 
+  filter(hunt_cat=="High") %>% 
+  summarise(mean_bird_diversity=mean(diversity_bird_species),
+            mean_mammal_diversity=mean(diversity_mammal_species),
+            nsamples=n())
+```
+
+```
+## # A tibble: 1 x 3
+##   mean_bird_diversity mean_mammal_diversity nsamples
+##                 <dbl>                 <dbl>    <int>
+## 1                1.66                  1.74        7
+```
+
+
+```r
+vertebrates %>% 
+  filter(hunt_cat=="Moderate") %>% 
+  summarise(mean_bird_diversity=mean(diversity_bird_species),
+            mean_mammal_diversity=mean(diversity_mammal_species),
+            nsamples=n())
+```
+
+```
+## # A tibble: 1 x 3
+##   mean_bird_diversity mean_mammal_diversity nsamples
+##                 <dbl>                 <dbl>    <int>
+## 1                1.62                  1.68        8
 ```
 
 11. (4 points) One of the conclusions in the study is that the relative abundance of animals drops off the closer you get to a village. Let's try to reconstruct this (without the statistics). How does the relative abundance (RA) of apes, birds, elephants, monkeys, rodents, and ungulates compare between sites that are less than 3km from a village to sites that are greater than 25km from a village? The variable `Distance` measures the distance of the transect from the nearest village. Hint: try using the `across` operator.  

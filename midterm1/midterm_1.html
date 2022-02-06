@@ -185,8 +185,8 @@ pre code {
 <pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
 <pre><code>## v ggplot2 3.3.5     v purrr   0.3.4
 ## v tibble  3.1.6     v dplyr   1.0.7
-## v tidyr   1.1.4     v stringr 1.4.0
-## v readr   2.1.1     v forcats 0.5.1</code></pre>
+## v tidyr   1.2.0     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.1</code></pre>
 <pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()</code></pre>
@@ -216,15 +216,12 @@ library(&quot;janitor&quot;)</code></pre>
 <pre class="r"><code>getwd()</code></pre>
 <pre><code>## [1] &quot;C:/Users/KAREN/Documents/GitHub/BIS15W2022_karen-kyutoku/midterm1&quot;</code></pre>
 <pre class="r"><code>elephants &lt;- readr::read_csv(&quot;data/ElephantsMF.csv&quot;)</code></pre>
-<pre><code>## Warning in unlink(c(requestFile, responseFile)): cannot get info on &#39;C:/Users/
-## KAREN/AppData/Local/Temp/RtmpCAFlhg/rstudio-ipc-requests-12fc3439a5e.rds&#39;,
-## reason &#39;アクセスが拒否されました。&#39;</code></pre>
-<pre><code>## Rows: 288 Columns: 3</code></pre>
-<pre><code>## -- Column specification --------------------------------------------------------
+<pre><code>## Rows: 288 Columns: 3
+## -- Column specification --------------------------------------------------------
 ## Delimiter: &quot;,&quot;
 ## chr (1): Sex
-## dbl (2): Age, Height</code></pre>
-<pre><code>## 
+## dbl (2): Age, Height
+## 
 ## i Use `spec()` to retrieve the full column specification for this data.
 ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>summary(elephants)</code></pre>
@@ -261,6 +258,12 @@ class(elephants$sex)</code></pre>
 </ol>
 <pre class="r"><code>mean(elephants$age)</code></pre>
 <pre><code>## [1] 10.97132</code></pre>
+<pre class="r"><code>elephants %&gt;% 
+  summarize(mean_age=mean(age))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   mean_age
+##      &lt;dbl&gt;
+## 1     11.0</code></pre>
 <ol start="7" style="list-style-type: decimal">
 <li>(2 points) How does the average age and height of elephants compare by sex?</li>
 </ol>
@@ -280,6 +283,15 @@ class(elephants$sex)</code></pre>
 ##   mean_male_age mean_male_height
 ##           &lt;dbl&gt;            &lt;dbl&gt;
 ## 1          8.95             185.</code></pre>
+<pre class="r"><code>elephants %&gt;% 
+  group_by(sex) %&gt;% 
+  summarise(mean_age=mean(age),
+            mean_height=mean(height))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   sex   mean_age mean_height
+##   &lt;fct&gt;    &lt;dbl&gt;       &lt;dbl&gt;
+## 1 F        12.8         190.
+## 2 M         8.95        185.</code></pre>
 <ol start="8" style="list-style-type: decimal">
 <li>(2 points) How does the average height of elephants compare by sex for individuals over 20 years old. Include the min and max height as well as the number of individuals in the sample as part of your analysis.</li>
 </ol>
@@ -303,18 +315,30 @@ class(elephants$sex)</code></pre>
 ##   mean_height min_height max_height n_samples
 ##         &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;     &lt;int&gt;
 ## 1        270.       229.       304.        13</code></pre>
+<pre class="r"><code>elephants %&gt;% 
+  filter(age&gt;20) %&gt;% 
+  group_by(sex) %&gt;% 
+  summarise(min_height=min(height),
+            max_height=max(height),
+            mean_height=mean(height),
+            n_elephants=n())</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   sex   min_height max_height mean_height n_elephants
+##   &lt;fct&gt;      &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;       &lt;int&gt;
+## 1 F           193.       278.        232.          37
+## 2 M           229.       304.        270.          13</code></pre>
 <p>For the next series of questions, we will use data from a study on vertebrate community composition and impacts from defaunation in <a href="https://en.wikipedia.org/wiki/Gabon">Gabon, Africa</a>. One thing to notice is that the data include 24 separate transects. Each transect represents a path through different forest management areas.</p>
 <p>Reference: Koerner SE, Poulsen JR, Blanchard EJ, Okouyi J, Clark CJ. Vertebrate community composition and diversity declines along a defaunation gradient radiating from rural villages in Gabon. <em>Journal of Applied Ecology</em>. 2016. This paper, along with a description of the variables is included inside the midterm 1 folder.</p>
 <ol start="9" style="list-style-type: decimal">
 <li>(2 points) Load <code>IvindoData_DryadVersion.csv</code> and use the function(s) of your choice to get an idea of the overall structure. Change the variables <code>HuntCat</code> and <code>LandUse</code> to factors.</li>
 </ol>
 <pre class="r"><code>vertebrates &lt;- readr::read_csv(&quot;data/IvindoData_DryadVersion.csv&quot;)</code></pre>
-<pre><code>## Rows: 24 Columns: 26</code></pre>
-<pre><code>## -- Column specification --------------------------------------------------------
+<pre><code>## Rows: 24 Columns: 26
+## -- Column specification --------------------------------------------------------
 ## Delimiter: &quot;,&quot;
 ## chr  (2): HuntCat, LandUse
-## dbl (24): TransectID, Distance, NumHouseholds, Veg_Rich, Veg_Stems, Veg_lian...</code></pre>
-<pre><code>## 
+## dbl (24): TransectID, Distance, NumHouseholds, Veg_Rich, Veg_Stems, Veg_lian...
+## 
 ## i Use `spec()` to retrieve the full column specification for this data.
 ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>summary(vertebrates)</code></pre>
@@ -409,6 +433,8 @@ class(vertebrates$hunt_cat)</code></pre>
 <pre class="r"><code>vertebrates$land_use &lt;- as.factor(vertebrates$land_use)
 class(vertebrates$land_use)</code></pre>
 <pre><code>## [1] &quot;factor&quot;</code></pre>
+<pre class="r"><code>vertebrates &lt;- vertebrates %&gt;% 
+  mutate_if(is.character, factor)</code></pre>
 <ol start="10" style="list-style-type: decimal">
 <li>(4 points) For the transects with high and moderate hunting intensity, how does the average diversity of birds and mammals compare?</li>
 </ol>
@@ -420,6 +446,24 @@ class(vertebrates$land_use)</code></pre>
 ##   mean_bird_diversity mean_mammal_diversity
 ##                 &lt;dbl&gt;                 &lt;dbl&gt;
 ## 1                1.64                  1.71</code></pre>
+<pre class="r"><code>vertebrates %&gt;% 
+  filter(hunt_cat==&quot;High&quot;) %&gt;% 
+  summarise(mean_bird_diversity=mean(diversity_bird_species),
+            mean_mammal_diversity=mean(diversity_mammal_species),
+            nsamples=n())</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   mean_bird_diversity mean_mammal_diversity nsamples
+##                 &lt;dbl&gt;                 &lt;dbl&gt;    &lt;int&gt;
+## 1                1.66                  1.74        7</code></pre>
+<pre class="r"><code>vertebrates %&gt;% 
+  filter(hunt_cat==&quot;Moderate&quot;) %&gt;% 
+  summarise(mean_bird_diversity=mean(diversity_bird_species),
+            mean_mammal_diversity=mean(diversity_mammal_species),
+            nsamples=n())</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   mean_bird_diversity mean_mammal_diversity nsamples
+##                 &lt;dbl&gt;                 &lt;dbl&gt;    &lt;int&gt;
+## 1                1.62                  1.68        8</code></pre>
 <ol start="11" style="list-style-type: decimal">
 <li>(4 points) One of the conclusions in the study is that the relative abundance of animals drops off the closer you get to a village. Let’s try to reconstruct this (without the statistics). How does the relative abundance (RA) of apes, birds, elephants, monkeys, rodents, and ungulates compare between sites that are less than 3km from a village to sites that are greater than 25km from a village? The variable <code>Distance</code> measures the distance of the transect from the nearest village. Hint: try using the <code>across</code> operator.</li>
 </ol>
