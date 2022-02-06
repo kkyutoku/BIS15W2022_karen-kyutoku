@@ -68,7 +68,7 @@ Yes.There are no unusual combinations of data in each cell.
 
 I think the data is tidy per the definitions of the tidyverse.
 
-The data is in wide format.
+The data appear to be tidy. Each variable has its own column, each observation has its own row, and each cell has its own value. Because the sites are repeated based on their observation date, the data are in long format.
 
 3. We are only interested in the variables site, date, and enterococci_cfu_100ml. Make a new object focused on these variables only. Name the object `sydneybeaches_long`
 
@@ -101,34 +101,40 @@ sydneybeaches_wide
 6. We haven't dealt much with dates yet, but separate the date into columns day, month, and year. Do this on the `sydneybeaches_long` data.
 
 ```{r}
-sydneybeaches_long2 <- sydneybeaches_long %>% 
+sydneybeaches_long %>% 
   separate(date, into= c("day","month","year"), sep = "/")
-sydneybeaches_long2
+sydneybeaches_long
 ```
 
 7. What is the average `enterococci_cfu_100ml` by year for each beach. Think about which data you will use- long or wide.
 
 ```{r}
-sydneybeaches_long3 <- sydneybeaches_long2 %>%
-  group_by(year, site) %>% 
-  summarize(mean=mean(enterococci_cfu_100ml))
-sydneybeaches_long3
+mean_entero <- sydneybeaches_long %>% 
+  separate(date, into=c("day", "month", "year"), sep="/") %>% 
+  group_by(site, year) %>% 
+  summarize(mean_enterococci_cfu_100ml=mean(enterococci_cfu_100ml, na.rm=T))
+mean_entero
 ```
 
 8. Make the output from question 7 easier to read by pivoting it to wide format.
 
 ```{r}
-sydneybeaches_wide2 <- sydneybeaches_long3 %>% 
-pivot_wider(names_from = "site", 
-            values_from = "mean")
-sydneybeaches_wide2
+mean_entero %>% 
+  pivot_wider(names_from=site,
+              values_from=mean_enterococci_cfu_100ml)
 ```
 
 9. What was the most polluted beach in 2018?
 
 ```{r}
-sydneybeaches_wide2 %>% 
-  filter(year == "2018")
+mean_entero %>% 
+  pivot_wider(names_from=site,
+              values_from=mean_enterococci_cfu_100ml) %>% 
+  filter(year==2018) %>% 
+  pivot_longer(-year,
+               names_to = "site",
+               values_to = "mean_enterococci_cfu_100ml") %>% 
+  arrange(desc(mean_enterococci_cfu_100ml))
 ```
 
 10. Please complete the class project survey at: [BIS 15L Group Project](https://forms.gle/H2j69Z3ZtbLH3efW6)

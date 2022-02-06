@@ -48,16 +48,10 @@ sydneybeaches <- readr::read_csv("data/sydneybeaches.csv")
 
 ```
 ## Rows: 3690 Columns: 8
-```
-
-```
 ## -- Column specification --------------------------------------------------------
 ## Delimiter: ","
 ## chr (4): Region, Council, Site, Date
 ## dbl (4): BeachId, Longitude, Latitude, Enterococci (cfu/100ml)
-```
-
-```
 ## 
 ## i Use `spec()` to retrieve the full column specification for this data.
 ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -79,16 +73,10 @@ read_csv(here("lab8", "data", "sydneybeaches.csv"))
 
 ```
 ## Rows: 3690 Columns: 8
-```
-
-```
 ## -- Column specification --------------------------------------------------------
 ## Delimiter: ","
 ## chr (4): Region, Council, Site, Date
 ## dbl (4): BeachId, Longitude, Latitude, Enterococci (cfu/100ml)
-```
-
-```
 ## 
 ## i Use `spec()` to retrieve the full column specification for this data.
 ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -119,16 +107,10 @@ sydneybeaches <-read_csv(here("lab8", "data", "sydneybeaches.csv")) %>% janitor:
 
 ```
 ## Rows: 3690 Columns: 8
-```
-
-```
 ## -- Column specification --------------------------------------------------------
 ## Delimiter: ","
 ## chr (4): Region, Council, Site, Date
 ## dbl (4): BeachId, Longitude, Latitude, Enterococci (cfu/100ml)
-```
-
-```
 ## 
 ## i Use `spec()` to retrieve the full column specification for this data.
 ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -145,7 +127,7 @@ Yes.There are no unusual combinations of data in each cell.
 
 I think the data is tidy per the definitions of the tidyverse.
 
-The data is in wide format.
+The data appear to be tidy. Each variable has its own column, each observation has its own row, and each cell has its own value. Because the sites are repeated based on their observation date, the data are in long format.
 
 3. We are only interested in the variables site, date, and enterococci_cfu_100ml. Make a new object focused on these variables only. Name the object `sydneybeaches_long`
 
@@ -266,9 +248,8 @@ sydneybeaches_wide
 
 
 ```r
-sydneybeaches_long2 <- sydneybeaches_long %>% 
+sydneybeaches_long %>% 
   separate(date, into= c("day","month","year"), sep = "/")
-sydneybeaches_long2
 ```
 
 ```
@@ -288,38 +269,61 @@ sydneybeaches_long2
 ## # ... with 3,680 more rows
 ```
 
+```r
+sydneybeaches_long
+```
+
+```
+## # A tibble: 3,690 x 3
+##    site           date       enterococci_cfu_100ml
+##    <chr>          <chr>                      <dbl>
+##  1 Clovelly Beach 02/01/2013                    19
+##  2 Clovelly Beach 06/01/2013                     3
+##  3 Clovelly Beach 12/01/2013                     2
+##  4 Clovelly Beach 18/01/2013                    13
+##  5 Clovelly Beach 30/01/2013                     8
+##  6 Clovelly Beach 05/02/2013                     7
+##  7 Clovelly Beach 11/02/2013                    11
+##  8 Clovelly Beach 23/02/2013                    97
+##  9 Clovelly Beach 07/03/2013                     3
+## 10 Clovelly Beach 25/03/2013                     0
+## # ... with 3,680 more rows
+```
+
 7. What is the average `enterococci_cfu_100ml` by year for each beach. Think about which data you will use- long or wide.
 
 
 ```r
-sydneybeaches_long3 <- sydneybeaches_long2 %>%
-  group_by(year, site) %>% 
-  summarize(mean=mean(enterococci_cfu_100ml))
+mean_entero <- sydneybeaches_long %>% 
+  separate(date, into=c("day", "month", "year"), sep="/") %>% 
+  group_by(site, year) %>% 
+  summarize(mean_enterococci_cfu_100ml=mean(enterococci_cfu_100ml, na.rm=T))
 ```
 
 ```
-## `summarise()` has grouped output by 'year'. You can override using the `.groups` argument.
+## `summarise()` has grouped output by 'site'. You can override using the `.groups`
+## argument.
 ```
 
 ```r
-sydneybeaches_long3
+mean_entero
 ```
 
 ```
 ## # A tibble: 66 x 3
-## # Groups:   year [6]
-##    year  site                      mean
-##    <chr> <chr>                    <dbl>
-##  1 2013  Bondi Beach              32.2 
-##  2 2013  Bronte Beach             26.8 
-##  3 2013  Clovelly Beach            9.28
-##  4 2013  Coogee Beach             39.7 
-##  5 2013  Gordons Bay (East)       24.8 
-##  6 2013  Little Bay Beach        122.  
-##  7 2013  Malabar Beach           101.  
-##  8 2013  Maroubra Beach           47.1 
-##  9 2013  South Maroubra Beach     39.3 
-## 10 2013  South Maroubra Rockpool  96.4 
+## # Groups:   site [11]
+##    site         year  mean_enterococci_cfu_100ml
+##    <chr>        <chr>                      <dbl>
+##  1 Bondi Beach  2013                        32.2
+##  2 Bondi Beach  2014                        11.1
+##  3 Bondi Beach  2015                        14.3
+##  4 Bondi Beach  2016                        19.4
+##  5 Bondi Beach  2017                        13.2
+##  6 Bondi Beach  2018                        22.9
+##  7 Bronte Beach 2013                        26.8
+##  8 Bronte Beach 2014                        17.5
+##  9 Bronte Beach 2015                        23.6
+## 10 Bronte Beach 2016                        61.3
 ## # ... with 56 more rows
 ```
 
@@ -327,23 +331,21 @@ sydneybeaches_long3
 
 
 ```r
-sydneybeaches_wide2 <- sydneybeaches_long3 %>% 
-pivot_wider(names_from = "site", 
-            values_from = "mean")
-sydneybeaches_wide2
+mean_entero %>% 
+  pivot_wider(names_from=site,
+              values_from=mean_enterococci_cfu_100ml)
 ```
 
 ```
 ## # A tibble: 6 x 12
-## # Groups:   year [6]
 ##   year  `Bondi Beach` `Bronte Beach` `Clovelly Beach` `Coogee Beach`
 ##   <chr>         <dbl>          <dbl>            <dbl>          <dbl>
 ## 1 2013           32.2           26.8             9.28           39.7
 ## 2 2014           11.1           17.5            13.8            52.6
-## 3 2015           14.3           NA               8.82           40.3
-## 4 2016           19.4           61.3            11.3            NA  
+## 3 2015           14.3           23.6             8.82           40.3
+## 4 2016           19.4           61.3            11.3            59.5
 ## 5 2017           13.2           16.8             7.93           20.7
-## 6 2018           NA             NA              NA              NA  
+## 6 2018           22.9           43.4            10.6            21.6
 ## # ... with 7 more variables: `Gordons Bay (East)` <dbl>,
 ## #   `Little Bay Beach` <dbl>, `Malabar Beach` <dbl>, `Maroubra Beach` <dbl>,
 ## #   `South Maroubra Beach` <dbl>, `South Maroubra Rockpool` <dbl>,
@@ -354,20 +356,31 @@ sydneybeaches_wide2
 
 
 ```r
-sydneybeaches_wide2 %>% 
-  filter(year == "2018")
+mean_entero %>% 
+  pivot_wider(names_from=site,
+              values_from=mean_enterococci_cfu_100ml) %>% 
+  filter(year==2018) %>% 
+  pivot_longer(-year,
+               names_to = "site",
+               values_to = "mean_enterococci_cfu_100ml") %>% 
+  arrange(desc(mean_enterococci_cfu_100ml))
 ```
 
 ```
-## # A tibble: 1 x 12
-## # Groups:   year [1]
-##   year  `Bondi Beach` `Bronte Beach` `Clovelly Beach` `Coogee Beach`
-##   <chr>         <dbl>          <dbl>            <dbl>          <dbl>
-## 1 2018             NA             NA               NA             NA
-## # ... with 7 more variables: `Gordons Bay (East)` <dbl>,
-## #   `Little Bay Beach` <dbl>, `Malabar Beach` <dbl>, `Maroubra Beach` <dbl>,
-## #   `South Maroubra Beach` <dbl>, `South Maroubra Rockpool` <dbl>,
-## #   `Tamarama Beach` <dbl>
+## # A tibble: 11 x 3
+##    year  site                    mean_enterococci_cfu_100ml
+##    <chr> <chr>                                        <dbl>
+##  1 2018  South Maroubra Rockpool                     112.  
+##  2 2018  Little Bay Beach                             59.1 
+##  3 2018  Bronte Beach                                 43.4 
+##  4 2018  Malabar Beach                                38.0 
+##  5 2018  Bondi Beach                                  22.9 
+##  6 2018  Coogee Beach                                 21.6 
+##  7 2018  Gordons Bay (East)                           17.6 
+##  8 2018  Tamarama Beach                               15.5 
+##  9 2018  South Maroubra Beach                         12.5 
+## 10 2018  Clovelly Beach                               10.6 
+## 11 2018  Maroubra Beach                                9.21
 ```
 
 10. Please complete the class project survey at: [BIS 15L Group Project](https://forms.gle/H2j69Z3ZtbLH3efW6)
