@@ -254,6 +254,10 @@ univ_calif
 ## # ... with 1 more variable: pftftug1_ef <dbl>
 ```
 
+```r
+#str_detect(): string detect - going through all the variables, and pull out a specific variable (e.g. university of california); string - go through character, not numerical value? (. means check every themselves)
+```
+
 Remove `Hastings College of Law` and `UC San Francisco` and store the final data frame as a new object `univ_calif_final`.
 
 ```r
