@@ -210,7 +210,7 @@ deserts %>%
 
 ![](lab10_hw_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
-6. Add another layer to your answer from #4 using `geom_point` to get an idea of how many measurements were taken for each species.
+6. Add another layer to your answer from #5 using `geom_point` to get an idea of how many measurements were taken for each species.
 
 ```r
 deserts %>% 

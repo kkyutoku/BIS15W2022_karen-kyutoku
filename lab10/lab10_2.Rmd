@@ -170,6 +170,8 @@ I use `group` to make individual box plots for each taxon.
 homerange %>% 
   ggplot(aes(x = class, y = log10.mass, group = taxon)) +
   geom_boxplot()
+
+#group = no keys, no color
 ```
 
 I can also use `fill` to associate the different taxa with a color coded key.
@@ -177,6 +179,8 @@ I can also use `fill` to associate the different taxa with a color coded key.
 homerange %>% 
   ggplot(aes(x = class, y = log10.mass, fill = taxon)) +
   geom_boxplot()
+
+#color= color just the edges of boxes
 ```
 
 ## That's it, let's take a break!   
