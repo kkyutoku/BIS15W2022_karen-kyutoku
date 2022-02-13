@@ -164,12 +164,18 @@ homerange %>%
 ## Practice
 1. Revisit the relationship between mass and homerange using a scatterplot, but color the points by taxonomic class using a custom color theme.
 ```{r}
-
+homerange %>% 
+  ggplot(aes(x=log10.mass, y=log10.hra, color=class))+
+  geom_point()+
+  scale_color_brewer(palette = "BrBG")
 ```
 
 2. Build bar plots that show the representation by taxonomic class with carnivores and herbivores. Try using a color theme that matches your scatterplot to keep everything consistent.
 ```{r}
-
+homerange %>% 
+  ggplot(aes(x=trophic.guild, fill=class))+
+  geom_bar(position="dodge")+
+  scale_fill_manual(values=my_palette)
 ```
 
 ## Faceting: `facet_wrap()`
@@ -178,6 +184,10 @@ homerange %>%
 p2 <- homerange %>% 
   ggplot(aes(x = log10.mass)) +
   geom_density()
+```
+
+```{r}
+glimpse(homerange)
 ```
 
 ```{r}
@@ -190,6 +200,13 @@ As you can imagine, there are lots of options for faceting. Another useful facet
 p2+facet_grid(thermoregulation~class)
 ```
 
+## Printing
+There are many options to export plots for use outside of R. Here is the basic code to do exports.
+```{r}
+pdf("homerange.pdf")
+p2
+dev.off()
+```
 ## That's it, let's take a break!   
 
 -->[Home](https://jmledford3115.github.io/datascibiol/)
