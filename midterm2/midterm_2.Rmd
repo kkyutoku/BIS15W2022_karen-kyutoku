@@ -134,13 +134,14 @@ life_exp_long %>%
   arrange(desc(delta))
 ```
 
-5. (3 points) Make a plot that shows the change over the past 100 years for the country with the biggest improvement in life expectancy. Be sure to add appropriate aesthetics to make the plot clean and clear. Once you have made the plot, do a little internet searching and see if you can discover what historical event may have contributed to this remarkable change.  
+5. (3 points) Make a plot that shows the change over the past 100 years for the country with the biggest improvement in life expectancy. Be sure to add appropriate aesthetics to make the plot clean and clear. Once you have made the plot, do a little internet searching and see if you can discover what historical event may have contributed to this remarkable change. 
+
 
 ```{r}
 life_exp_long %>% 
   filter(country=="Kuwait"|country=="Kyrgyz Republic"|country=="Turkmenistan"|country=="South Korea"|country=="Tajikistan") %>% 
   select(year, country, life_expectancy) %>% 
-  ggplot(aes(x=year, y=life_expectancy, group=country, color=country))+
+  ggplot(aes(x=as.numeric(year), y=life_expectancy, group=country, color=country))+
   geom_line()+
   theme_minimal()+
   theme(axis.text.x = element_text(angle = 60, hjust=1))+
@@ -155,7 +156,7 @@ Some events that may have caused this change are industrial developement and eco
 6. (3 points) Which 5 countries have had the highest population growth over the past 100 years (1920-2020)?  
 
 ```{r}
-population_long$year <- as.character(population_long$year)
+population_long$year <- as.numeric(population_long$year)
 population_long
 ```
 
@@ -193,7 +194,7 @@ gdppercapita_long%>%
 gdppercapita_long %>% 
   filter(country=="Qatar"|country=="Luxembourg"|country=="Singapore"|country=="Brunei"|country=="Ireland") %>% 
   select(year, country, gdppercapita) %>% 
-  ggplot(aes(x=year, y=gdppercapita, group=country, color=country))+
+  ggplot(aes(x=as.numeric(year), y=gdppercapita, group=country, color=country))+
   geom_line()+
   theme_minimal()+
   theme(axis.text.x = element_text(angle = 60, hjust=1))+

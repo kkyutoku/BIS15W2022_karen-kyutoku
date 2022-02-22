@@ -1287,14 +1287,15 @@ life_exp_long %>%
 ## # ... with 177 more rows
 ```
 
-5. (3 points) Make a plot that shows the change over the past 100 years for the country with the biggest improvement in life expectancy. Be sure to add appropriate aesthetics to make the plot clean and clear. Once you have made the plot, do a little internet searching and see if you can discover what historical event may have contributed to this remarkable change.  
+5. (3 points) Make a plot that shows the change over the past 100 years for the country with the biggest improvement in life expectancy. Be sure to add appropriate aesthetics to make the plot clean and clear. Once you have made the plot, do a little internet searching and see if you can discover what historical event may have contributed to this remarkable change. 
+
 
 
 ```r
 life_exp_long %>% 
   filter(country=="Kuwait"|country=="Kyrgyz Republic"|country=="Turkmenistan"|country=="South Korea"|country=="Tajikistan") %>% 
   select(year, country, life_expectancy) %>% 
-  ggplot(aes(x=year, y=life_expectancy, group=country, color=country))+
+  ggplot(aes(x=as.numeric(year), y=life_expectancy, group=country, color=country))+
   geom_line()+
   theme_minimal()+
   theme(axis.text.x = element_text(angle = 60, hjust=1))+
@@ -1312,24 +1313,24 @@ Some events that may have caused this change are industrial developement and eco
 
 
 ```r
-population_long$year <- as.character(population_long$year)
+population_long$year <- as.numeric(population_long$year)
 population_long
 ```
 
 ```
 ## # A tibble: 58,695 x 3
-##    country     year  popuation
-##    <chr>       <chr>     <dbl>
-##  1 Afghanistan 1800    3280000
-##  2 Afghanistan 1801    3280000
-##  3 Afghanistan 1802    3280000
-##  4 Afghanistan 1803    3280000
-##  5 Afghanistan 1804    3280000
-##  6 Afghanistan 1805    3280000
-##  7 Afghanistan 1806    3280000
-##  8 Afghanistan 1807    3280000
-##  9 Afghanistan 1808    3280000
-## 10 Afghanistan 1809    3280000
+##    country      year popuation
+##    <chr>       <dbl>     <dbl>
+##  1 Afghanistan  1800   3280000
+##  2 Afghanistan  1801   3280000
+##  3 Afghanistan  1802   3280000
+##  4 Afghanistan  1803   3280000
+##  5 Afghanistan  1804   3280000
+##  6 Afghanistan  1805   3280000
+##  7 Afghanistan  1806   3280000
+##  8 Afghanistan  1807   3280000
+##  9 Afghanistan  1808   3280000
+## 10 Afghanistan  1809   3280000
 ## # ... with 58,685 more rows
 ```
 
@@ -1387,7 +1388,7 @@ gdppercapita_long%>%
 gdppercapita_long %>% 
   filter(country=="Qatar"|country=="Luxembourg"|country=="Singapore"|country=="Brunei"|country=="Ireland") %>% 
   select(year, country, gdppercapita) %>% 
-  ggplot(aes(x=year, y=gdppercapita, group=country, color=country))+
+  ggplot(aes(x=as.numeric(year), y=gdppercapita, group=country, color=country))+
   geom_line()+
   theme_minimal()+
   theme(axis.text.x = element_text(angle = 60, hjust=1))+
