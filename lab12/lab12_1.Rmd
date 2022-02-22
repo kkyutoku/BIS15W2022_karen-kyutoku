@@ -25,6 +25,8 @@ Often, the data we need is split up into multiple files, either by some geograph
 
 So copying/pasting multiple files together isn't an option for us. Let's see how we can do this in R. In the `data/spiders` folder there are 32 files, each named for a county in California. Each file contains a record of an observation of a species of cave spider. Each observation contains a unique ID for each spider as well as some other important information such as date and location name. Let's use R to list all the `.csv` files in the `spiders` folder.  
 
+[csv can be imported in any folder.]
+
 But first, load the tidyverse and the other packages we have been using.
 ```{r, message = FALSE}
 library(tidyverse)
@@ -60,13 +62,20 @@ class(spider_list[[3]])
 ## Practice
 1. What are the names of our list elements?
 ```{r}
-
+names(spider_list[[2]])
+```
+```{r}
+str(spider_list[[1]])
 ```
 
 ## Naming List Elements
 We don't need to here, but for demonstration purposes we can name the elements in our list. We will first get the names of each file, but we only want the county part. We will use `strsplit()` for that, which creates a nested list of strings. We want to keep the first element of each list element. Because there is only one element in each nested list element, we can use `unlist()`.
 ```{r}
 names <- list.files(path = "data/spiders", pattern = ".csv")
+names
+```
+
+```{r}
 names_list <- strsplit(names, split = " .csv")
 names_list
 ```
@@ -86,6 +95,9 @@ names(spider_list)
 ```{r}
 spider_list$Butte
 ```
+```{r}
+spider_list$Napa
+```
 
 ## Merging Files
 We are fortunate here in that all of our data frames have the same column names. This makes it easy to merge the data together with `bind_rows()` from`dplyr`. `bind_rows()` matches columns by name.
@@ -101,6 +113,14 @@ Let's assume we have a database of customers and their purchases.
 ```{r}
 table_A <- read_csv(here("lab12", "data", "table_A.csv"))
 table_B <- read_csv(here("lab12", "data", "table_B.csv"))
+```
+```{r}
+names(table_A)
+table_A
+```
+```{r}
+names(table_B)
+table_B
 ```
 
 The general syntax for joins is...
@@ -162,7 +182,10 @@ We will use a join here to merge lat/long to our data frame. Both files contain 
 ```{r}
 spiders_with_locs <- left_join(spiders_all, spiders_locs, by = c("Accession"))
 summary(spiders_with_locs)
+names(spiders_with_locs)
 ```
+any join will work - accession # match
+if there is a typo, full join will show
 
 As a side note, joining data can highlight problems or typos with the data when the join does not go as expected.  
 
@@ -177,6 +200,11 @@ class(spiders_with_locs$Date)
 The `lubridate` package was specifically created to deal with dates of all types. There are many useful functions in `lubridate` for working with dates. Please see the excellent tutorial provided by [RichardOnData](https://www.youtube.com/watch?v=VYAo69WdJZg&ab_channel=RichardOnData).
 ```{r}
 day <- today()
+day
+```
+year-month-date
+
+```{r}
 str(day)
 ```
 
@@ -192,7 +220,7 @@ dmy(spiders_with_locs$Date)
 
 If you want to use base R, then here is the format.
 ```{r}
-as.Date(spiders_with_locs$Date, format = "%d/%m/%y")
+as.Date(spiders_with_locs$Date, format = "%d/%m/%y") #not lubridate
 ```
 `
 There are many different options for working with dates and datetimes in lubridate including `ymd`, `mdy`, `dmy`, `mdy_hms`, `ymd_hms`.
@@ -207,23 +235,23 @@ dateformat5 <- "20200922 170000"
 ## Practice 
 1. Convert each of the examples above using lubridate.
 ```{r}
-
+ymd(dateformat1)
 ```
 
 ```{r}
-
+mdy(dateformat2)
 ```
 
 ```{r}
-
+dmy(dateformat3)
 ```
 
 ```{r}
-
+mdy_hms(dateformat4)
 ```
 
 ```{r}
-
+ymd_hms(dateformat5)
 ```
 
 Have a look at these options.
@@ -251,10 +279,10 @@ It will be very helpful if you can install the following packages before the nex
 #library(devtools)
 #devtools::install_github("dkahle/ggmap")
 ```
-
-`rgeos`, `rgdal`, and `albersusa`
+`remotes` and `albersusa`
 ```{r, message = FALSE}
-#install.packages("albersusa")
+#install.packages("remotes")
+#remotes::install_github("hrbrmstr/albersusa")
 ```
 
 ## That's it! Take a break and I will see you on Zoom!  
