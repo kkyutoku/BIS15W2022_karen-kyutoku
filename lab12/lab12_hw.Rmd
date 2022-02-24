@@ -1,11 +1,11 @@
 ---
 title: "Lab 12 Homework"
-author: "Please Add Your Name Here"
-date: "`r Sys.Date()`"
+author: "Karen Kyutoku"
+date: "24 February 2022"
 output:
-  html_document:
+  html_document: 
     theme: spacelab
-    toc: no
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -23,8 +23,17 @@ library(tidyverse)
 library(janitor)
 library(here)
 library(ggmap)
-library(albersusa)
 ``` 
+
+```{r}
+library(albersusa)
+```
+
+```{r}
+#install.packages("devtools")
+#library(devtools)
+devtools::install_github("dkahle/ggmap")
+```
 
 ## Load the Data
 We will use two separate data sets for this homework.  
@@ -33,73 +42,95 @@ We will use two separate data sets for this homework.
 2. The second data set is from Brandell, Ellen E (2021), Serological dataset and R code for: Patterns and processes of pathogen exposure in gray wolves across North America, Dryad, [Dataset](https://doi.org/10.5061/dryad.5hqbzkh51).  
 
 1. Load the `grizzly` data and evaluate its structure. As part of this step, produce a summary that provides the range of latitude and longitude so you can build an appropriate bounding box.
-```{r}
-
-```
 
 ```{r}
-
+grizzly <- read_csv(here("lab12", "data", "bear-sightings.csv"))
 ```
+```{r}
+summary(grizzly)
+```
+
 
 2. Use the range of the latitude and longitude to build an appropriate bounding box for your map.
-```{r}
 
+```{r}
+lat <- c(55.02, 70.37)
+long <- c(131.3, 166.2)
+bbox <- make_bbox(long, lat, f=0.05)
 ```
 
 3. Load a map from `stamen` in a terrain style projection and display the map.
 ```{r}
-
+map1 <- get_map(bbox, maptype = "terrain", source = "stamen")
 ```
 
 ```{r}
-
+ggmap(map1)
 ```
 
 4. Build a final map that overlays the recorded observations of grizzly bears in Alaska.
-```{r}
 
+```{r}
+ggmap(map1)+
+  geom_point(data = grizzly, aes(longitude, latitude), size=0.8)+
+  labs(x="Longitude", y="Latitude", title="Ursos arctos")
 ```
 
-5. Let's switch to the wolves data. Load the data and evaluate its structure.
-```{r}
 
+Let's switch to the wolves data. Brandell, Ellen E (2021), Serological dataset and R code for: Patterns and processes of pathogen exposure in gray wolves across North America, Dryad, [Dataset](https://doi.org/10.5061/dryad.5hqbzkh51).  
+
+5. Load the data and evaluate its structure.  
+```{r}
+wolves <- read_csv(here("lab12", "data", "wolves_data", "wolves_dataset.csv"))
+```
+```{r}
+glimpse(wolves)
 ```
 
 6. How many distinct wolf populations are included in this study? Mae a new object that restricts the data to the wolf populations in the lower 48 US states.
 ```{r}
+wolves %>% count(pop)
+```
+```{r}
+us_wolves <- 
+  wolves %>% 
+  filter(pop %in% c("GTNP", "MEXICAN", "MI", "MT", "SNF", "YNP"))
+```
 
+7. Use the range of the latitude and longitude to build an appropriate bounding box for your map.
+```{r}
+us_wolves %>% 
+  select(lat, long) %>% 
+  summary()
+```
+```{r}
+lat <- c(33.69, 47.75)
+long <- c(-110.99, -86.82)
+bbox2 <- make_bbox(long, lat, f = 0.05)
+```
+
+8.  Load a map from `stamen` in a `terrain-lines` projection and display the map.
+```{r}
+map2 <- get_map(bbox2, maptype = "terrain-lines", source = "stamen")
 ```
 
 ```{r}
-
+ggmap(map2)
 ```
 
-7. Use the `albersusa` package to make a base map of the lower 48 US states.
+9. Build a final map that overlays the recorded observations of wolves in the lower 48 states.
 ```{r}
-
+ggmap(map2) + 
+  geom_point(us_wolves, mapping=aes(x=long, y=lat), size=2)+
+  labs(x = "Longitude", y = "Latitude", title = "Wolves in the Lower 48")
 ```
 
+
+10. Use the map from #9 above, but add some aesthetics. Try to `fill` and `color` by population.
 ```{r}
-
-```
-
-```{r}
-
-```
-
-8. Use the relimited data to plot the distribution of wolf populations in the lower 48 US states.
-```{r}
-
-```
-
-9. What is the average pack size for the wolves in this study by region?
-```{r}
-
-```
-
-10. Make a new map that shows the distribution of wolves in the lower 48 US states but which has the size of location markers adjusted by pack size.
-```{r}
-
+ggmap(map2) + 
+  geom_point(us_wolves, mapping=aes(x=long, y=lat, fill=pop, color=pop), size=3)+
+  labs(x = "Longitude", y = "Latitude", title = "Wolves in the Lower 48")
 ```
 
 ## Push your final code to GitHub!
