@@ -6,6 +6,7 @@ output:
     theme: spacelab
     toc: yes
     toc_float: yes
+runtime: shiny
 ---
 
 ```{r setup, include = FALSE}
@@ -54,6 +55,7 @@ A shiny app consists of a user interface (ui) function, server function, and run
 3. The `run` function combines the ui and server function to run the app.  
 
 Below is a bare bones shiny app. You can get this code snippet by typing `shinyapp`. It doesn't do anything because we haven't created any inputs with the ui or any outputs with the server. Copy and paste the code or get it by typing `shinyapp`, and hit shift+tab.  
+
 ```{r}
 library(shiny)
 
